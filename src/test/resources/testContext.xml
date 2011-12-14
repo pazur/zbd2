@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+			http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop">
+
+	<aop:aspectj-autoproxy/>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+	    <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>
+	    <property name="url" value="jdbc:hsqldb:hsql:testdb"/>
+	    <property name="username" value="sa"/>
+	    <property name="password" value=""/>
+  	</bean>
+  		
+	<bean id="defaultPreLoadListener" class="org.hibernate.event.def.DefaultPreLoadEventListener">
+	</bean>
+	
+	<bean id="aclListener" class="listeners.AclListener">
+	</bean>
+	
+	<bean id="announcementInstanceListener" class="listeners.AnnouncementInstancePostInsertListener"></bean>
+	
+	<bean id="myAuthentication" class="auth.MyAuthentication" />
+
+	<bean id="announcementService" class="services.AnnouncementService"></bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>content.Content</value>
+				<value>content.Announcement</value>
+				<value>content.AnnouncementInstance</value>
+				<value>user.User</value>
+				<value>user.Group</value>
+				<value>acl.Acl</value>
+				<value>acl.GroupAcl</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.hbm2ddl.auto=create-drop
+				hibernate.id.new_generator_mappings=true
+				hibernate.show_sql=true
+				hibernate.format_sql=true
+				hibernate.dialect=org.hibernate.dialect.HSQLDialect
+			</value>
+		</property>
+		
+		<property name="eventListeners">
+			<map>
+				<entry key="pre-load">
+					<list>
+						<ref bean="defaultPreLoadListener" />
+						<ref bean="aclListener" />
+					</list>
+				</entry>
+				<entry key="pre-insert">
+					<list>
+						<ref bean="aclListener" />
+					</list>
+				</entry>
+				<entry key="pre-update">
+					<list>
+						<ref bean="aclListener" />
+					</list>
+				</entry>
+				<entry key="pre-delete">
+					<list>
+						<ref bean="aclListener" />
+					</list>
+				</entry>
+				<entry key="post-insert">
+					<list>
+						<ref bean="announcementInstanceListener" />
+					</list>
+				</entry>
+			</map>
+		</property>
+	
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<tx:annotation-driven />
+
+	
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="allowCreate" value="true" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="groupsDao" class="dao.GroupDao" >
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+
+	<bean id="contentsDao" class="dao.ContentDao">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+	<bean id="usersDao" class="dao.UserDao">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+	<bean id="aclsDao" class="dao.AclDao">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+	<bean id="announcementDao" class="dao.AnnouncementDao">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+	
+	<bean id="announcementInstanceDao" class="dao.AnnouncementInstanceDao">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+
+</beans>
