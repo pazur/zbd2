@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import daoint.AclDaoInt;
+import daoint.UserDaoInt;
+
 import acl.Acl;
 import acl.GroupAcl;
 import auth.MyAuthentication;

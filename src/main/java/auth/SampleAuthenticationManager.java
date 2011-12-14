@@ -10,14 +10,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import user.User;
-import dao.UserDaoInt;
+import daoint.UserDaoInt;
 
 public class SampleAuthenticationManager implements AuthenticationManager {
-	//private List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-//  	static {
-//  		AUTHORITIES.add(new GrantedAuthorityImpl("ROLE_USER"));
-//  	}
 	private UserDaoInt userDao;
 	
 	public SampleAuthenticationManager(UserDaoInt userDao){

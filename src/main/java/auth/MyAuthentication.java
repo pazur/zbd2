@@ -12,7 +12,7 @@ import org.springframework.security.core.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 
-import dao.UserDaoInt;
+import daoint.UserDaoInt;
 
 import user.User;
 

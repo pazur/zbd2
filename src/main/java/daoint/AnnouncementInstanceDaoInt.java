@@ -1,4 +1,4 @@
-package dao;
+package daoint;
 
 import java.util.Collection;
 import java.util.List;

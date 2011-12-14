@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import content.Announcement;
+import daoint.AnnouncementDaoInt;
 
 
 @Repository

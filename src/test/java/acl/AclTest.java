@@ -18,10 +18,10 @@ import auth.MyAuthentication;
 import user.User;
 import user.Group;
 
-import dao.AclDaoInt;
-import dao.AnnouncementDaoInt;
-import dao.GroupDaoInt;
-import dao.UserDaoInt;
+import daoint.AclDaoInt;
+import daoint.AnnouncementDaoInt;
+import daoint.GroupDaoInt;
+import daoint.UserDaoInt;
 
 
 @ContextConfiguration(locations = { "classpath:testContext.xml" })

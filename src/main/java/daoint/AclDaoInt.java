@@ -1,4 +1,4 @@
-package dao;
+package daoint;
 
 import user.Group;
 import user.User;

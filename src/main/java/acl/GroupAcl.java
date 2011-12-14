@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import aclint.AclInterface;
+
 import user.Group;
 
 @Entity

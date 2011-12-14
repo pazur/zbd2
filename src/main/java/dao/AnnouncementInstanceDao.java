@@ -14,6 +14,7 @@ import auth.MyAuthentication;
 import user.User;
 
 import content.AnnouncementInstance;
+import daoint.AnnouncementInstanceDaoInt;
 
 @Repository
 @Transactional(readOnly = true)

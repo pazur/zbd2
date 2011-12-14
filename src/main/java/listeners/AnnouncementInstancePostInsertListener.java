@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import content.AnnouncementInstance;
 
-import dao.AclDaoInt;
+import daoint.AclDaoInt;
 
 public class AnnouncementInstancePostInsertListener implements
 		PostInsertEventListener {

@@ -20,11 +20,11 @@ import content.Content;
 
 import auth.MyAuthentication;
 
-import dao.AclDaoInt;
-import dao.AnnouncementDaoInt;
-import dao.AnnouncementInstanceDaoInt;
-import dao.GroupDaoInt;
-import dao.UserDaoInt;
+import daoint.AclDaoInt;
+import daoint.AnnouncementDaoInt;
+import daoint.AnnouncementInstanceDaoInt;
+import daoint.GroupDaoInt;
+import daoint.UserDaoInt;
 
 import services.AnnouncementService;
 import user.Group;

@@ -17,9 +17,9 @@ import content.AnnouncementInstance;
 import user.Group;
 import user.User;
 
-import dao.AclDaoInt;
-import dao.AnnouncementDaoInt;
-import dao.AnnouncementInstanceDaoInt;
+import daoint.AclDaoInt;
+import daoint.AnnouncementDaoInt;
+import daoint.AnnouncementInstanceDaoInt;
 
 public class AnnouncementService {
 

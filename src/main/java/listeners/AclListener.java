@@ -22,7 +22,7 @@ import content.Announcement;
 import content.AnnouncementInstance;
 import content.Content;
 
-import dao.AclDaoInt;
+import daoint.AclDaoInt;
 
 public class AclListener implements PreLoadEventListener, PreInsertEventListener, PreUpdateEventListener, PreDeleteEventListener{
 
