@@ -18,6 +18,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import acl.Rights;
+
 import content.Announcement;
 import content.AnnouncementInstance;
 import content.Content;
@@ -60,8 +62,13 @@ public class AclListener implements PreLoadEventListener, PreInsertEventListener
 		if (a.equals(AllowState.DENY))
 			return false;
 		if (getAccessControlledClasses().contains(cls)){
-			Integer rights = aclDao.checkAcl(cls, id);
-			if (rights < minRights)
+			Rights rights = aclDao.checkAcl(cls, id);
+			int r = 1;
+			if (rights == Rights.NONE)
+				r = -1;
+			if (rights == Rights.READ)
+				r = 0;
+			if (r < minRights)
 				return false;
 		}
 		return true;

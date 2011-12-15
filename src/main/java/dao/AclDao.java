@@ -15,6 +15,7 @@ import daoint.UserDaoInt;
 
 import acl.Acl;
 import acl.GroupAcl;
+import acl.Rights;
 import auth.MyAuthentication;
 
 import user.Group;
@@ -27,12 +28,12 @@ public class AclDao extends HibernateDaoSupport implements AclDaoInt{
 	@Autowired
 	private UserDaoInt udao;
 	
-	public int checkAcl(Class<?> cls, Long id){
+	public Rights checkAcl(Class<?> cls, Long id){
 		User currentUser = MyAuthentication.getCurrentUser();
 		currentUser = udao.get(currentUser.getId());
 		int a1 = getAcls(cls, id, currentUser, true);
 		int a2 = getAcls(cls, id, currentUser, false);
-		return Math.max(a1,a2 );
+		return fromInt(Math.max(a1,a2 ));
 	}
 
 	private String getAclDeleteQuery(){
@@ -136,7 +137,8 @@ public class AclDao extends HibernateDaoSupport implements AclDaoInt{
 	
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void addAccess(Class<?> cls, Long id, Group g, int rights){
+	public void addAccess(Class<?> cls, Long id, Group g, Rights r){
+		int rights = toInt(r);
 		@SuppressWarnings("unchecked")
 		List<GroupAcl> acls = queryExact(cls, id, g, true);
 		if(acls.isEmpty()){
@@ -154,7 +156,8 @@ public class AclDao extends HibernateDaoSupport implements AclDaoInt{
 	}
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void addAccess(Class<?> cls, Long id, User g, int rights){
+	public void addAccess(Class<?> cls, Long id, User g, Rights r){
+		int rights = toInt(r);
 		@SuppressWarnings("unchecked")
 		List<Acl> acls = queryExact(cls, id, g, false);
 		if(acls.isEmpty()){
@@ -222,5 +225,20 @@ public class AclDao extends HibernateDaoSupport implements AclDaoInt{
 			cls = cls.getSuperclass();
 		}
 		return result;
+	}
+	
+	private int toInt(Rights rights){
+		if (rights == Rights.NONE)
+			throw new RuntimeException("Cannot add NONE rights");
+		if (rights == Rights.READ)
+			return 0;
+		return 1;
+	}
+	private Rights fromInt(int rights){
+		if (rights == 0)
+			return Rights.READ;
+		if (rights == -1)
+			return Rights.NONE;
+		return Rights.WRITE;
 	}
 }

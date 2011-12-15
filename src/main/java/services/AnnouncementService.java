@@ -9,6 +9,8 @@ import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
+
+import acl.Rights;
 import auth.MyAuthentication;
 
 import content.Announcement;
@@ -64,7 +66,7 @@ public class AnnouncementService {
 	
 	private void addReadRights(Long id, Collection<User> users){
 		for(User u: users){
-			aclDao.addAccess(Announcement.class, id, u, 0);
+			aclDao.addAccess(Announcement.class, id, u, Rights.READ);
 		}
 	}
 	

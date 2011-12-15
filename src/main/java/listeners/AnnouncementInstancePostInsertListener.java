@@ -4,6 +4,8 @@ import org.hibernate.event.PostInsertEvent;
 import org.hibernate.event.PostInsertEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import acl.Rights;
+
 import content.AnnouncementInstance;
 
 import daoint.AclDaoInt;
@@ -24,7 +26,7 @@ public class AnnouncementInstancePostInsertListener implements
 		Object entity = arg0.getEntity();
 		if (entity.getClass().equals(AnnouncementInstance.class)){
 			AnnouncementInstance ai = (AnnouncementInstance) entity;
-			aclDao.addAccess(AnnouncementInstance.class, (Long) arg0.getId(), ai.getReceiver(), 1);
+			aclDao.addAccess(AnnouncementInstance.class, (Long) arg0.getId(), ai.getReceiver(), Rights.WRITE);
 		}
 	}
 }

@@ -62,13 +62,13 @@ public class AclTest {
 		u.setUsername("acltest1");
 		udao.save(u);
 		authentication.login("acltest1");
-		assertEquals(-1, dao.checkAcl(Content.class, null));
-		dao.addAccess(Content.class, null, u, 0);
-		assertEquals(0, dao.checkAcl(Content.class, null));
-		dao.addAccess(Content.class, null, u, 1);
-		assertEquals(1, dao.checkAcl(Content.class, null));
-		dao.addAccess(Content.class, null, u, 0);
-		assertEquals(1, dao.checkAcl(Content.class, null));
+		assertEquals(Rights.NONE, dao.checkAcl(Content.class, null));
+		dao.addAccess(Content.class, null, u, Rights.READ);
+		assertEquals(Rights.READ, dao.checkAcl(Content.class, null));
+		dao.addAccess(Content.class, null, u, Rights.WRITE);
+		assertEquals(Rights.WRITE, dao.checkAcl(Content.class, null));
+		dao.addAccess(Content.class, null, u, Rights.READ);
+		assertEquals(Rights.WRITE, dao.checkAcl(Content.class, null));
 	}
 	
 	@Test
@@ -77,13 +77,13 @@ public class AclTest {
 		u.setUsername("acltest2");
 		udao.save(u);
 		authentication.login("acltest2");
-		assertEquals(-1, dao.checkAcl(Content.class, 1L));
-		dao.addAccess(Content.class, 1L, u, 0);
-		assertEquals(0, dao.checkAcl(Content.class, 1L));
-		dao.addAccess(Content.class, null, u, 1);
-		assertEquals(1, dao.checkAcl(Content.class, 1L));
-		dao.addAccess(Content.class, 1L, u, 0);
-		assertEquals(1, dao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, dao.checkAcl(Content.class, 1L));
+		dao.addAccess(Content.class, 1L, u, Rights.READ);
+		assertEquals(Rights.READ, dao.checkAcl(Content.class, 1L));
+		dao.addAccess(Content.class, null, u, Rights.WRITE);
+		assertEquals(Rights.WRITE, dao.checkAcl(Content.class, 1L));
+		dao.addAccess(Content.class, 1L, u, Rights.READ);
+		assertEquals(Rights.WRITE, dao.checkAcl(Content.class, 1L));
 	}
 	
 	@Test
@@ -92,13 +92,13 @@ public class AclTest {
 		u.setUsername("acltest3");
 		udao.save(u);
 		authentication.login("acltest3");
-		assertEquals(-1, dao.checkAcl(Content.class, null));
-		dao.addAccess(Content.class, null, u, 0);
-		assertEquals(0, dao.checkAcl(Content.class, null));
-		dao.addAccess(Content.class, null, u, 1);
-		assertEquals(1, dao.checkAcl(Content.class, null));
+		assertEquals(Rights.NONE, dao.checkAcl(Content.class, null));
+		dao.addAccess(Content.class, null, u, Rights.READ);
+		assertEquals(Rights.READ, dao.checkAcl(Content.class, null));
+		dao.addAccess(Content.class, null, u, Rights.WRITE);
+		assertEquals(Rights.WRITE, dao.checkAcl(Content.class, null));
 		dao.revokeAccess(Content.class, null, u);
-		assertEquals(-1, dao.checkAcl(Content.class, null));
+		assertEquals(Rights.NONE, dao.checkAcl(Content.class, null));
 	}
 	
 	@Test
@@ -107,14 +107,14 @@ public class AclTest {
 		u.setUsername("acltest4");
 		udao.save(u);
 		authentication.login("acltest4");
-		assertEquals(-1, dao.checkAcl(Content.class, 1L));
-		dao.addAccess(Content.class, null, u, 0);
-		assertEquals(0, dao.checkAcl(Content.class, null));
-		assertEquals(0, dao.checkAcl(Content.class, 1L));
-		dao.addAccess(Content.class, 1L, u, 1);
-		assertEquals(1, dao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, dao.checkAcl(Content.class, 1L));
+		dao.addAccess(Content.class, null, u, Rights.READ);
+		assertEquals(Rights.READ, dao.checkAcl(Content.class, null));
+		assertEquals(Rights.READ, dao.checkAcl(Content.class, 1L));
+		dao.addAccess(Content.class, 1L, u, Rights.WRITE);
+		assertEquals(Rights.WRITE, dao.checkAcl(Content.class, 1L));
 		dao.revokeAccess(Content.class, 1L, u);
-		assertEquals(0, dao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.READ, dao.checkAcl(Content.class, 1L));
 	}
 	
 	@Test
@@ -123,17 +123,17 @@ public class AclTest {
 		u.setUsername("acltest5");
 		udao.save(u);
 		authentication.login("acltest5");
-		assertEquals(-1, dao.checkAcl(Content.class, null));
-		assertEquals(-1, dao.checkAcl(Announcement.class, null));
-		dao.addAccess(Content.class, null, u, 0);
-		assertEquals(0, dao.checkAcl(Content.class, null));
-		assertEquals(0, dao.checkAcl(Announcement.class, null));
-		dao.addAccess(Content.class, null, u, 1);
-		assertEquals(1, dao.checkAcl(Content.class, null));
-		assertEquals(1, dao.checkAcl(Announcement.class, null));
-		dao.addAccess(Content.class, null, u, 0);
-		assertEquals(1, dao.checkAcl(Content.class, null));
-		assertEquals(1, dao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, dao.checkAcl(Content.class, null));
+		assertEquals(Rights.NONE, dao.checkAcl(Announcement.class, null));
+		dao.addAccess(Content.class, null, u, Rights.READ);
+		assertEquals(Rights.READ, dao.checkAcl(Content.class, null));
+		assertEquals(Rights.READ, dao.checkAcl(Announcement.class, null));
+		dao.addAccess(Content.class, null, u, Rights.WRITE);
+		assertEquals(Rights.WRITE, dao.checkAcl(Content.class, null));
+		assertEquals(Rights.WRITE, dao.checkAcl(Announcement.class, null));
+		dao.addAccess(Content.class, null, u, Rights.READ);
+		assertEquals(Rights.WRITE, dao.checkAcl(Content.class, null));
+		assertEquals(Rights.WRITE, dao.checkAcl(Announcement.class, null));
 	}
 	
 	private void announcementAccessDenied(Long id){
@@ -153,29 +153,29 @@ public class AclTest {
 		Announcement a = new Announcement();
 		a.setBody("ble");
 		a.setTitle("bleble");
-		dao.addAccess(Announcement.class, null, u, 1);
+		dao.addAccess(Announcement.class, null, u, Rights.WRITE);
 		Long id = adao.save(a);
 		dao.revokeAccess(Announcement.class, null, u);
 		announcementAccessDenied(id);
 		//Add read to class
-		dao.addAccess(Announcement.class, null, u, 0);
+		dao.addAccess(Announcement.class, null, u, Rights.READ);
 		adao.get(id);
 		//Revoke read to class
 		dao.revokeAccess(Announcement.class, null, u);
 		announcementAccessDenied(id);
 		//Add read to instance
-		dao.addAccess(Announcement.class, id, u, 0);
+		dao.addAccess(Announcement.class, id, u, Rights.READ);
 		adao.get(id);
 		//Revoke read to instance
 		dao.revokeAccess(Announcement.class, id, u);
 		announcementAccessDenied(id);
 		//Add read to superclass
-		dao.addAccess(Content.class, null, u, 0);
+		dao.addAccess(Content.class, null, u, Rights.READ);
 		adao.get(id);
 		//Revoke read to superclass
 		dao.revokeAccess(Content.class, null, u);
 		announcementAccessDenied(id);
-		dao.addAccess(Content.class, id, u, 0);
+		dao.addAccess(Content.class, id, u, Rights.READ);
 		announcementAccessDenied(id);
 	}
 	
@@ -191,14 +191,14 @@ public class AclTest {
 		gdao.save(g1);
 		g2.setName("g2");
 		gdao.save(g2);
-		dao.addAccess(Announcement.class, null, g1, 0);
-		dao.addAccess(Announcement.class, null, g2, 1);
-		assertEquals(-1, dao.checkAcl(Announcement.class, null));
+		dao.addAccess(Announcement.class, null, g1, Rights.READ);
+		dao.addAccess(Announcement.class, null, g2, Rights.WRITE);
+		assertEquals(Rights.NONE, dao.checkAcl(Announcement.class, null));
 		u.getGroups().add(g1);
 		udao.saveOrUpdate(u);
-		assertEquals(0, dao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.READ, dao.checkAcl(Announcement.class, null));
 		u.getGroups().add(g2);
 		udao.saveOrUpdate(u);
-		assertEquals(1, dao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.WRITE, dao.checkAcl(Announcement.class, null));
 	}
 }

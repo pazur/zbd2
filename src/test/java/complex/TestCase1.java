@@ -18,6 +18,7 @@ import content.Announcement;
 import content.AnnouncementInstance;
 import content.Content;
 
+import acl.Rights;
 import auth.MyAuthentication;
 
 import daoint.AclDaoInt;
@@ -85,7 +86,7 @@ public class TestCase1 {
 		User receiver = createUser("receiver");
 		//2
 		auth.login("sender");
-		aclDao.addAccess(Announcement.class, null, sender, 1);
+		aclDao.addAccess(Announcement.class, null, sender, Rights.WRITE);
 		Announcement announcement = new Announcement();
 		announcement.setBody("body");
 		announcement.setTitle("title");
@@ -155,7 +156,7 @@ public class TestCase1 {
 		
 		// 3
 		auth.login("test25");
-		aclDao.addAccess(Announcement.class, null, u5, 1);
+		aclDao.addAccess(Announcement.class, null, u5, Rights.WRITE);
 		Announcement announcement = new Announcement();
 		announcement.setBody("bodybody");
 		announcement.setTitle("titletitle");
@@ -199,61 +200,61 @@ public class TestCase1 {
 		g2 = groupDao.get(g2.getId());
 		
 		auth.login("test3user");
-		aclDao.addAccess(Announcement.class, 1L, u, 0);
-		assertEquals(0, aclDao.checkAcl(Announcement.class, 1L)); //FAILS
-		assertEquals(-1, aclDao.checkAcl(Content.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, null));
-		assertEquals(-1, aclDao.checkAcl(Content.class, null));
+		aclDao.addAccess(Announcement.class, 1L, u, Rights.READ);
+		assertEquals(Rights.READ, aclDao.checkAcl(Announcement.class, 1L)); //FAILS
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, null));
 		
-		aclDao.addAccess(Announcement.class, 1L, g1, 1);
-		assertEquals(1, aclDao.checkAcl(Announcement.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Content.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, null));
-		assertEquals(-1, aclDao.checkAcl(Content.class, null));	
+		aclDao.addAccess(Announcement.class, 1L, g1, Rights.WRITE);
+		assertEquals(Rights.WRITE, aclDao.checkAcl(Announcement.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, null));	
 		
-		aclDao.addAccess(Content.class, 2L, g2, 0);
-		assertEquals(0, aclDao.checkAcl(Content.class, 2L));
-		assertEquals(1, aclDao.checkAcl(Announcement.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, 2L));
-		assertEquals(-1, aclDao.checkAcl(Content.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, null));
-		assertEquals(-1, aclDao.checkAcl(Content.class, null));	
+		aclDao.addAccess(Content.class, 2L, g2, Rights.READ);
+		assertEquals(Rights.READ, aclDao.checkAcl(Content.class, 2L));
+		assertEquals(Rights.WRITE, aclDao.checkAcl(Announcement.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, 2L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, null));	
 	
 		aclDao.revokeAccess(Announcement.class, null, u);
-		assertEquals(0, aclDao.checkAcl(Content.class, 2L));
-		assertEquals(1, aclDao.checkAcl(Announcement.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Content.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, null));
-		assertEquals(-1, aclDao.checkAcl(Content.class, null));
+		assertEquals(Rights.READ, aclDao.checkAcl(Content.class, 2L));
+		assertEquals(Rights.WRITE, aclDao.checkAcl(Announcement.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, null));
 
 		aclDao.revokeAccess(Announcement.class, 1L, u);
-		assertEquals(0, aclDao.checkAcl(Content.class, 2L));
-		assertEquals(1, aclDao.checkAcl(Announcement.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Content.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, null));
-		assertEquals(-1, aclDao.checkAcl(Content.class, null));
+		assertEquals(Rights.READ, aclDao.checkAcl(Content.class, 2L));
+		assertEquals(Rights.WRITE, aclDao.checkAcl(Announcement.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, null));
 
 		aclDao.revokeAccess(Announcement.class, 1L, u);
-		assertEquals(0, aclDao.checkAcl(Content.class, 2L));
-		assertEquals(1, aclDao.checkAcl(Announcement.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Content.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, null));
-		assertEquals(-1, aclDao.checkAcl(Content.class, null));
+		assertEquals(Rights.READ, aclDao.checkAcl(Content.class, 2L));
+		assertEquals(Rights.WRITE, aclDao.checkAcl(Announcement.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, null));
 		
 
 		aclDao.revokeAccess(Announcement.class, 1L, g1);
-		assertEquals(0, aclDao.checkAcl(Content.class, 2L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Content.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, null));
-		assertEquals(-1, aclDao.checkAcl(Content.class, null));
+		assertEquals(Rights.READ, aclDao.checkAcl(Content.class, 2L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, null));
 		
-		aclDao.addAccess(Content.class, 2L, g1, 1);
-		assertEquals(1, aclDao.checkAcl(Content.class, 2L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, 2L));
-		assertEquals(-1, aclDao.checkAcl(Content.class, 1L));
-		assertEquals(-1, aclDao.checkAcl(Announcement.class, null));
-		assertEquals(-1, aclDao.checkAcl(Content.class, null));	
+		aclDao.addAccess(Content.class, 2L, g1, Rights.WRITE);
+		assertEquals(Rights.WRITE, aclDao.checkAcl(Content.class, 2L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, 2L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, 1L));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Announcement.class, null));
+		assertEquals(Rights.NONE, aclDao.checkAcl(Content.class, null));	
 	}
 }
